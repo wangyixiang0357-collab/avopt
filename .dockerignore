@@ -1,0 +1,17 @@
+**/__pycache__
+**/*.pyc
+.git
+.runtime
+.workbuddy
+archive
+logs
+results*
+release
+.env*
+.cdsapirc
+*.docx
+*.pdf
+*.zip
+data/weather_cache
+data/era5_land
+data/*实测*

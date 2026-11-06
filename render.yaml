@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: avopt
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: AVOPT_ACCESS_USER
+        value: avopt
+      - key: AVOPT_ACCESS_PASSWORD
+        generateValue: true

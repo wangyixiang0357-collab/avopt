@@ -1,0 +1,13 @@
+{
+  "site": {"name": "大荔", "lat": 34.70, "lon": 110.07, "tz": 8, "elevation": 350.0, "albedo": 0.20},
+  "array": {"tilt": 28.0, "height": 3.0, "span": 12.9, "width": 4.4, "rows": 6,
+            "module_eff": 0.21, "noct": 45.0, "temp_coef": -0.004,
+            "system_loss": 0.15, "structure_loss": 0.06},
+  "crop": {"name": "冬小麦", "sow_doy": 283, "harvest_doy": 156, "tbase": 0.0, "tcap": 32.0,
+           "lai_max": 5.0, "k": 0.50, "rue": 3.2, "hi": 0.45, "kc": [0.40, 1.15, 0.30],
+           "yield_target": 6750.0, "par_k": 6.0, "shade_rue_gain": 0.05, "shade_lai_gain": 0.10},
+  "soil": {"fc": 0.30, "wp": 0.13, "zr": 1.0, "raw_frac": 0.50},
+  "econ": {"wheat_price": 2.40, "rape_price": 5.50, "tariff": 0.35,
+           "pv_capex_per_w": 3.00, "pv_life": 25, "pv_om_per_w_year": 0.04,
+           "ag_cost_per_ha": 6000.0, "discount": 0.06}
+}

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>农光互补布局优化系统 V1.6</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;background:#f4f6f8;color:#22303c}
+header{background:#1f3b57;color:#fff;padding:12px 24px;display:flex;align-items:baseline;gap:10px}
+header h1{margin:0;font-size:17px;font-weight:600}
+header span{font-size:12px;opacity:.75}
+.wrap{display:flex;gap:14px;padding:14px;align-items:flex-start}
+.panel{background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:14px}
+.side{width:410px;flex:0 0 410px}
+.main{flex:1;min-width:660px}
+h2{font-size:13px;margin:12px 0 6px;color:#1f3b57;font-weight:600}
+h2:first-child{margin-top:0}
+label{display:block;font-size:11.5px;color:#5b6b82;margin:6px 0 2px}
+input,select{width:100%;padding:5px 7px;border:1px solid #d5dce4;border-radius:4px;font-size:12.5px}
+.row{display:flex;gap:6px;align-items:flex-end}
+.row>div{flex:1}
+.chk{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#5b6b82;margin-top:4px}
+.chk input[type=checkbox]{width:auto}
+button{width:100%;margin-top:12px;padding:11px;background:#1f3b57;color:#fff;border:0;border-radius:5px;font-size:14px;cursor:pointer}
+button:hover{background:#2b527a}
+button:disabled{background:#9aa3ad;cursor:wait}
+.note{font-size:10.5px;color:#8592a0;line-height:1.5;margin-top:8px}
+.hero{background:linear-gradient(180deg,#1f3b57,#2b527a);color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.hero .t{font-size:12px;opacity:.85}
+.hero .big{display:flex;gap:30px;margin-top:6px;align-items:flex-end}
+.hero .big div span{font-size:11px;opacity:.8;display:block}
+.hero .big div b{font-size:31px;font-weight:600;line-height:1.1}
+.hero .big div i{font-size:12px;font-style:normal;opacity:.85;margin-left:2px}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+.metric{background:rgba(255,255,255,.12);border-radius:5px;padding:7px 9px}
+.metric .k{font-size:10.5px;opacity:.8}
+.metric .v{font-size:16px;font-weight:600;margin-top:2px}
+.metric .u{font-size:10px;opacity:.75;margin-left:2px}
+.tabs{display:flex;gap:6px;margin:10px 0 6px}
+.tab{padding:4px 11px;font-size:12px;border:1px solid #d5dce4;border-radius:14px;cursor:pointer;background:#fff}
+.tab.on{background:#1f3b57;color:#fff;border-color:#1f3b57}
+.hide{display:none}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:5px 6px;border-bottom:1px solid #e8edf2;text-align:right}
+th{background:#eef3f8;color:#3d4f63;font-weight:600}
+td:first-child,th:first-child{text-align:left}
+img{width:100%;border-radius:4px}
+.meta{font-size:11px;color:#7b8898;margin-top:6px;line-height:1.6}
+.spin{display:none;margin-top:8px;font-size:12px;color:#1f3b57}
+.spin.on{display:block}
+.warn{display:none;background:#fff4e5;border-left:3px solid #c9a227;padding:8px 10px;
+      font-size:12px;color:#8a5a00;margin-top:10px;border-radius:4px;line-height:1.5}
+</style></head>
+<body>
+<header><h1>农光互补布局优化系统</h1><span>V1.6 · ERA5 中国历史气象</span></header>
+<div class="wrap">
+  <div class="panel side">
+    <h2>站点</h2>
+    <label>地区名称（省/市/县）</label>
+    <input id="place" value="大荔县" placeholder="如：大荔县、西安市、民勤县">
+    <button id="lookup" style="padding:6px;margin-top:6px;font-size:12px">检索地区并匹配坐标</button>
+    <select id="area" aria-label="气象行政区" style="margin-top:6px"><option value="">请先检索地区</option></select>
+    <div id="location_note" class="note" role="status"></div>
+    <div class="row" style="margin-top:6px">
+      <div><label>纬度 / °</label><input id="lat" value="34.70"></div>
+      <div><label>经度 / °</label><input id="lon" value="110.07"></div>
+    </div>
+    <button id="reverse_lookup" class="small">按经纬度定位行政区</button>
+    <div class="chk"><input type="checkbox" id="coordinates_confirmed"><label for="coordinates_confirmed">已核对地块坐标与上述气象行政区一致</label></div>
+    <label>气象数据来源</label><select id="weather_source"><option value="era5">ERA5 全国再分析（自动获取）</option><option value="station">旧模式：行政区气象 + 本地辐射</option><option value="builtin">旧模式：大荔历史气象（2020—2024）</option></select>
+    <label>气象年份（2020—2026，Ctrl 多选）</label><select id="years" multiple size="7" aria-label="气象年份"></select>
+    <h2 id="radiation_heading">太阳辐射 · ERA5</h2>
+    <div id="radiation_status" class="note" role="status" aria-live="polite"></div>
+    <div id="online_weather"><button id="weather_download" class="small">获取 / 检查所选年份气象</button><button id="weather_export" class="small">导出逐日气象 CSV</button></div>
+    <details id="local_radiation" class="hide"><summary>导入辐射数据</summary>
+      <label for="radiation_format">CSV 数据格式</label>
+      <select id="radiation_format">
+        <option value="arco_hourly_j">官方点位时序 · 小时量 J/m²</option>
+        <option value="cumulative_hourly_j">原始小时产品 · 累积量 J/m²</option>
+        <option value="daily_mj">逐日总量 · MJ/m²</option>
+        <option value="daily_j">逐日总量 · J/m²</option>
+        <option value="daily_kwh">逐日总量 · kWh/m²</option>
+      </select>
+      <label for="radiation_file">ERA5-Land 辐射 CSV</label><input id="radiation_file" type="file" accept=".csv,text/csv">
+      <button id="radiation_import" class="small">按当前经纬度导入</button>
+      <button id="radiation_request" class="small">导出官方 CDS 下载请求</button>
+    </details>
+    <details><summary>气象订正与湿度</summary>
+      <div class="chk"><input type="checkbox" id="bias_correct"><label for="bias_correct">按参考时段气象均值订正</label></div>
+      <div class="row"><div><label>目标时段均温 / ℃</label><input id="target_tmean" value="13.4"></div><div><label>目标时段降水 / mm</label><input id="target_precip" value="514"></div></div>
+      <label>订正依据</label><input id="bias_reference" value="大荔项目提供的气象站多年均值（请核对年份）">
+      <label>固定日均湿度 / %（可留空）</label><input id="rh_override" placeholder="1～100">
+    </details>
+    <label>作物</label>
+    <select id="crop"><option>冬小麦</option><option>冬油菜</option><option>夏玉米</option><option>大豆</option><option>花生</option></select>
+    <div id="crop_note" class="note"></div>
+    <label id="crop_price_label" for="crop_price">作物单价 / 元/kg</label><input id="crop_price" value="2.4" inputmode="decimal">
+    <details open><summary>经济参数</summary>
+      <div class="row"><div><label for="tariff">电价 / 元/kWh</label><input id="tariff" value="0.35" inputmode="decimal"></div><div><label for="pv_capex_per_w">光伏造价 / 元/W</label><input id="pv_capex_per_w" value="3" inputmode="decimal"></div></div>
+      <div class="row"><div><label for="pv_life">光伏寿命 / 年</label><input id="pv_life" value="25" inputmode="numeric"></div><div><label for="pv_om_per_w_year">运维 / 元/W/年</label><input id="pv_om_per_w_year" value="0.04" inputmode="decimal"></div></div>
+      <label for="ag_cost_per_ha">农业成本 / 元/hm²/年</label><input id="ag_cost_per_ha" value="6000" inputmode="decimal">
+      <label for="land_rent_per_ha">土地租金 / 元/hm²/年</label><input id="land_rent_per_ha" value="0" inputmode="decimal">
+    </details>
+
+    <h2>组件</h2>
+    <div class="row">
+      <div><label>坡面宽 W / m</label><input id="width" value="4.18"></div>
+      <div><label>组件长 L / m</label><input id="mlen" value="2.28"></div>
+    </div>
+    <details><summary>遮挡与接线估算参数</summary>
+      <label for="modules_per_string">每串 W×L 计算单元数</label><input id="modules_per_string" value="20" inputmode="numeric">
+      <label for="bypass_blocks">每个 W×L 单元的旁路分区数</label><input id="bypass_blocks" value="3" inputmode="numeric">
+      <label for="block_axis">旁路分区排列方向</label><select id="block_axis"><option value="slope">沿坡面分区</option><option value="east_west">沿东西向分区</option></select>
+      <label for="row_offset">相邻排向东错位 / m</label><input id="row_offset" value="0" inputmode="decimal">
+    </details>
+
+    <h2>设计变量</h2>
+    <label>组件倾角 β / °</label>
+    <div class="row"><div><input id="tilt_lo" value="12"></div><div><input id="tilt_hi" value="30"></div></div>
+    <div class="chk"><input type="checkbox" id="tilt_fix"><label for="tilt_fix" style="margin:0">固定为</label>
+      <input id="tilt_val" value="17" style="width:70px"></div>
+
+    <label>南北排距 S / m</label>
+    <div class="row"><div><input id="s_lo" value="8"></div><div><input id="s_hi" value="16"></div></div>
+    <div class="chk"><input type="checkbox" id="s_fix"><label for="s_fix" style="margin:0">固定为</label>
+      <input id="s_val" value="10" style="width:70px"></div>
+
+    <label>安装高度 H / m</label>
+    <div class="row"><div><input id="h_lo" value="1.8"></div><div><input id="h_hi" value="4.5"></div></div>
+    <div class="chk"><input type="checkbox" id="h_fix"><label for="h_fix" style="margin:0">固定为</label>
+      <input id="h_val" value="2.2" style="width:70px"></div>
+
+    <label>东西向间隙 G / m</label>
+    <div class="row"><div><input id="g_lo" value="0"></div><div><input id="g_hi" value="0.6"></div></div>
+    <div class="chk"><input type="checkbox" id="g_fix"><label for="g_fix" style="margin:0">固定为</label>
+      <input id="g_val" value="0.0" style="width:70px"></div>
+
+    <h2>目标与约束</h2>
+    <label>测点/冠层离地高度 / m</label><input id="canopy" value="1.0">
+    <label>试验设计</label>
+    <input id="levels" type="hidden" value="5">
+    <div id="design_note" class="note">五水平 · 155 组试验</div>
+    <div class="row">
+      <div><label>收益权重</label><input id="w_e" value="0.4"></div>
+      <div><label>产量权重</label><input id="w_y" value="0.4"></div>
+      <div><label>均匀性权重</label><input id="w_c" value="0.2"></div>
+    </div>
+    <label>最低产量 / 露地（%）</label><input id="y_min" value="60">
+    <button id="run">按综合损失估算寻优</button>
+    <div class="spin" id="spin">正在计算，请稍候…</div>
+    <button id="config_export" class="small">导出参数 JSON</button>
+    <label>导入参数或方案 JSON</label><input id="import_file" type="file" accept=".json">
+    <div id="status" class="note" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="panel main" id="result" style="display:none">
+    <div class="hero">
+      <div class="t" id="meta">推荐布局</div>
+      <div class="big">
+        <div><span>组件倾角 β</span><b id="v_t">–</b><i>°</i></div>
+        <div><span>阵列跨度 S</span><b id="v_s">–</b><i>m</i></div>
+        <div><span>安装高度 H</span><b id="v_h">–</b><i>m</i></div>
+        <div><span>横向间隙 G</span><b id="v_g">–</b><i>m</i></div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="k">覆盖率</div><div class="v"><span id="v_gcr">–</span><span class="u">%</span></div></div>
+        <div class="metric"><div class="k">板下采光率</div><div class="v" id="v_under">–</div></div>
+        <div class="metric"><div class="k" id="yield_metric_label">相对产量（无光伏=100）</div><div class="v"><span id="v_y">–</span><span class="u">%</span></div></div>
+        <div class="metric"><div class="k" id="energy_metric_label">时段累计发电量</div><div class="v"><span id="v_e">–</span><span class="u">MWh/hm²</span></div></div>
+        <div class="metric"><div class="k" id="net_metric_label">时段净收益估算</div><div class="v"><span id="v_n">–</span><span class="u">万元/hm²</span></div></div>
+      </div>
+      <div class="warn" id="warn"></div>
+    </div>
+    <details class="result-details"><summary>数据与计算参数</summary><div id="data_note" class="meta"></div><div id="report_params" class="meta"></div></details>
+    <div id="pv_shading_note" class="meta"></div>
+    <div class="actions"><button id="save" class="small">保存当前方案</button><button id="json_export" class="small">导出完整方案 JSON</button><button id="excel_export" class="small">导出 Excel 明细</button><button id="print" class="small">打印 / 保存 PDF 报告</button></div>
+    <div class="tabs">
+      <div class="tab on" data-t="p1">响应面 / 变量曲线</div>
+      <div class="tab" data-t="p2">权衡关系</div>
+      <div class="tab" data-t="p3">采光剖面</div>
+      <div class="tab" data-t="p4">试验设计表</div>
+      <div class="tab" data-t="p5">解释与诊断</div>
+    </div>
+    <div id="p1"><img id="i1"></div>
+    <div id="p2" class="hide"><img id="i2"></div>
+    <div id="p3" class="hide"><img id="i3" alt="南北向采光曲线、光伏阵列截面及低侧板沿、柱中心板下、高侧板沿和板间平均采光率"></div>
+    <div id="p4" class="hide"><table id="tbl"></table><div class="meta" id="r2"></div></div>
+    <div id="p5" class="hide"><h2>局部敏感性（内核复算）</h2><div id="sensitivity"></div><h2>响应面诊断</h2><div id="diagnostics" class="meta"></div></div>
+    <div class="actions"><select id="scan_factor"><option value="tilt">只扫倾角</option><option value="s">只扫跨度</option><option value="h">只扫安装高度</option><option value="g">只扫横向间隙</option></select><button id="scan" class="small">固定当前解，扫描所选因子</button></div>
+  </div>
+</div>
+<section class="panel saved"><h2>本机保存的方案与对比</h2><div id="saved_list"></div><button id="compare" class="small">对比所选方案</button><div id="comparison"></div></section>
+<style>
+details{margin:10px 0;font-size:12px}summary{cursor:pointer;color:#1f3b57}.small{font-size:12px;padding:7px;margin-top:7px}.actions{display:flex;gap:8px;align-items:center;margin:10px 0}.actions button,.actions select{flex:1}.saved{margin:0 14px 14px}.saved-row{display:flex;gap:10px;align-items:center;font-size:12px;padding:6px 0}.saved-row input{width:auto}.saved-row button{width:auto;margin:0;padding:4px 10px;font-size:12px}footer{padding:10px;text-align:center;font-size:11px;color:#718096}.bar{height:10px;background:#b5722a;display:inline-block;min-width:2px}.main{overflow-x:auto}.note{color:#617184}
+.side h2,.side summary{font-size:18px;font-weight:600}
+.side h2{margin-top:20px;margin-bottom:10px}
+.side label{font-size:16px;color:#384b61;margin-top:10px;line-height:1.5}
+.side input,.side select{font-size:17px;padding:9px 10px;min-width:0}
+.side input[type=checkbox]{width:19px;height:19px;flex:0 0 19px}
+.side input[type=file]{font-size:15px}
+.side button{font-size:16px!important;padding:10px!important}
+.side .chk{font-size:16px;align-items:center;margin:8px 0}
+.side .chk label{font-size:16px;margin:0}
+.side .chk input:not([type=checkbox]){width:95px!important;margin-left:auto}
+.side .note{font-size:15px;line-height:1.6;color:#52657a}
+.side details{margin:16px 0}
+.side .row{gap:10px}
+.side .row>div{min-width:0}
+.meta{font-size:14px;line-height:1.7}
+#pv_shading_note{margin:12px 0}
+.result-details summary{font-size:15px}
+#status:not(:empty){background:#f0f4f8;padding:10px;border-radius:5px}
+#radiation_status:not(:empty){padding:9px;background:#f0f4f8;border-radius:5px}
+@media(max-width:1100px){.wrap{display:block}.side{width:100%;margin-bottom:14px;flex-basis:auto}.main{min-width:0}.hero .big{gap:15px;flex-wrap:wrap}.metrics{grid-template-columns:repeat(3,1fr)}.actions{flex-wrap:wrap}.actions button{min-width:130px}}
+@media print{@page{size:A4;margin:12mm}body{background:white;font-size:10pt}header{background:white;color:black;padding:0}.wrap{display:block;padding:0}.side,.tabs,.actions,.saved,footer,#spin{display:none!important}.main{min-width:0;width:100%;box-shadow:none;padding:0}.hero{background:#eef3f8!important;color:black;break-inside:avoid}.hero .big div b{font-size:22px}.metric{background:none}.hide{display:block!important}#p1,#p2,#p3,#p5{break-inside:avoid}img{max-height:200mm;object-fit:contain}tr{break-inside:avoid}#report_params{display:block}h2{break-after:avoid}.warn{color:black}.meta{font-size:9pt}}
+</style>
+<!--CROP_CONFIG-->
+<script src="/client.js"></script></body></html>

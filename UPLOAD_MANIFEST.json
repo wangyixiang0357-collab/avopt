@@ -1,0 +1,337 @@
+[
+  {
+    "path": ".dockerignore",
+    "bytes": 162,
+    "sha256": "90a249b209fb6ae2f200255b0d5736970bee138286c60f00fbe3154a816d6479"
+  },
+  {
+    "path": ".gitignore",
+    "bytes": 212,
+    "sha256": "e06f44c44f1c98a5cc8997dc7e61f1c53453ee41be5ac01cc0580245354ce82c"
+  },
+  {
+    "path": "AVOpt/__init__.py",
+    "bytes": 313,
+    "sha256": "5db971376922982731e76a52d297ad52196c0d63d8cf17f64182da665bc347ea"
+  },
+  {
+    "path": "AVOpt/crop_library.py",
+    "bytes": 2614,
+    "sha256": "b257da5dc6a62558a3a995c36157cd4e18922b2406bf811618a3566b33365f74"
+  },
+  {
+    "path": "AVOpt/diagnostics.py",
+    "bytes": 3409,
+    "sha256": "a56e91e15203d5314a82239f22c44fb1ba9e2730a093bd99254ecec74ed4960d"
+  },
+  {
+    "path": "AVOpt/doe.py",
+    "bytes": 4894,
+    "sha256": "33981a13c7b6ff9fd5a3a4208b7b7be1b3bb5fa99a12aba4866356b21371584d"
+  },
+  {
+    "path": "AVOpt/engine.py",
+    "bytes": 19215,
+    "sha256": "851ac09695fc39c8735d9fb68c3ce23bd4044a80d4274adff9cdc301a5196d24"
+  },
+  {
+    "path": "AVOpt/era5_land.py",
+    "bytes": 10720,
+    "sha256": "c51a41309956ff8bd388a607de8f2b37c467b32037fab250a93e54b30f7dfbb3"
+  },
+  {
+    "path": "AVOpt/exports.py",
+    "bytes": 2062,
+    "sha256": "937661a8c0435e14fcb23fee58535ac12373c31ed7b2b0fa18693c4703e70b50"
+  },
+  {
+    "path": "AVOpt/geocoding.py",
+    "bytes": 5217,
+    "sha256": "c49c3ac15f8dd099a171f3ba01b89dedda052f5ee6bcadf221d4658a6c06e9e4"
+  },
+  {
+    "path": "AVOpt/inputs.py",
+    "bytes": 8756,
+    "sha256": "4249ad807cba530393212fef999f93431dfaa5d67e47f9109bf410957c9826fa"
+  },
+  {
+    "path": "AVOpt/open_meteo.py",
+    "bytes": 12498,
+    "sha256": "c6bc170f839b9a834f4d92e3a28959f0c0fd415f9ae62b7c4d2becf479a6c3d9"
+  },
+  {
+    "path": "AVOpt/period.py",
+    "bytes": 1819,
+    "sha256": "1883553e031fce25ee863ace6eb87dc94e4128a00f859abac57d8704ed9daef0"
+  },
+  {
+    "path": "AVOpt/static/client.js",
+    "bytes": 24410,
+    "sha256": "9acb0b0c8c938eeab0013d415cbcad43ab5cf5d8dc5baf5696c0d408a86d726c"
+  },
+  {
+    "path": "AVOpt/static/index.html",
+    "bytes": 16749,
+    "sha256": "1896d5fb21c62790717bcc0c9862867a6dc7fa888fa6545642112b860a70f9ea"
+  },
+  {
+    "path": "AVOpt/weather_cn.py",
+    "bytes": 7998,
+    "sha256": "9a0b1949c0df4f78fdd1383d6e03486bf80b34d700d2e9c23b69330aed7032aa"
+  },
+  {
+    "path": "AVOpt/webapp.py",
+    "bytes": 30030,
+    "sha256": "66d83d689e603a5c2a03d92e78adf06dc9558247086914598dcf7b440b7b717f"
+  },
+  {
+    "path": "AVSim/__init__.py",
+    "bytes": 714,
+    "sha256": "3f8698b61a6c91f2493e8275b6daa5ccdada14c53cc5669e429f6bf0b53de94e"
+  },
+  {
+    "path": "AVSim/cli.py",
+    "bytes": 2088,
+    "sha256": "eea86de39627916a859a48d633c7e845c6abce1c93bfb4f5786a0f244790f6b2"
+  },
+  {
+    "path": "AVSim/config.py",
+    "bytes": 4084,
+    "sha256": "f7af1a1892e61ab94311136beeb8f032f6de364ce02012be063ce15193d55422"
+  },
+  {
+    "path": "AVSim/crop.py",
+    "bytes": 3383,
+    "sha256": "2e96b96423b137d98265ed3e1262e630f9aafb76fcdc9ece1d20cad57df67a01"
+  },
+  {
+    "path": "AVSim/econ.py",
+    "bytes": 1219,
+    "sha256": "81a0a1b88012e258a0c9077e06113d70adcc52ad656845743f234a55e6fcc2ac"
+  },
+  {
+    "path": "AVSim/io_utils.py",
+    "bytes": 3339,
+    "sha256": "05b8c2d3b6b626e629d3d6e002f9bfc448dfe4621d197ed9d8e509e6dde46ac8"
+  },
+  {
+    "path": "AVSim/model.py",
+    "bytes": 6343,
+    "sha256": "c36b2fdc953e28c124dc6c4678fe081e000a9b51828c9aaea02ad99a000fa588"
+  },
+  {
+    "path": "AVSim/photosynthesis.py",
+    "bytes": 3732,
+    "sha256": "3ae84cb175d1960b7d507afc806bf89a51c0ce5e42ee52325c061577be2da61b"
+  },
+  {
+    "path": "AVSim/pv.py",
+    "bytes": 5148,
+    "sha256": "974224570c9ce0b3f75aec791b666f8781267346a0de6b5563b5cb86b53bfdc9"
+  },
+  {
+    "path": "AVSim/pv_losses.py",
+    "bytes": 7307,
+    "sha256": "a407fca3acff717b146085fc619db6cf8b078ee172e7b6015edb23878993c1d0"
+  },
+  {
+    "path": "AVSim/shade.py",
+    "bytes": 6499,
+    "sha256": "3edeb358cdd826fb497bab45328d68c68a96a09d35e2a93998e3314b03ff3e3f"
+  },
+  {
+    "path": "AVSim/shadow.py",
+    "bytes": 2175,
+    "sha256": "bf326c38b26ee4f5e1a0dd519209dcb2085423b569f5d65aad5a12d958fe7807"
+  },
+  {
+    "path": "AVSim/solar.py",
+    "bytes": 4454,
+    "sha256": "85208f0ca4cd2fa5d5ec01c7ade6a2a2c138faa844e5021928cd1c7230c7b44d"
+  },
+  {
+    "path": "AVSim/water.py",
+    "bytes": 2600,
+    "sha256": "a08c8f0160de6cdf24bff0ead874f43afde6c94250ee25489ce40aec5e629cde"
+  },
+  {
+    "path": "Dockerfile",
+    "bytes": 707,
+    "sha256": "1212012d2b8635baaeb8c7b0b2ea3609a24cea95aa25a1162dc55b9dd839ab9a"
+  },
+  {
+    "path": "README.md",
+    "bytes": 4378,
+    "sha256": "50951b8af30fc59d960789b12eabfaf300d60773ac78d150ec9fd92d6b356fdd"
+  },
+  {
+    "path": "cloud_wsgi.py",
+    "bytes": 4778,
+    "sha256": "1b5bc430a3818b1fd8d9463a639e829e894a3fa9d69f3846bfcc6cc74e13685c"
+  },
+  {
+    "path": "config.json",
+    "bytes": 859,
+    "sha256": "e0b3901aba25b31c1a9ea5ed765ef5ec0ee869c5bc704e6c5a01a20e9a04fb23"
+  },
+  {
+    "path": "data/admin_boundaries/100000_full.json",
+    "bytes": 582522,
+    "sha256": "99adfeded5223848bbe37a0a12f8023e11ee12161c7800521c27db42fdeac275"
+  },
+  {
+    "path": "data/admin_boundaries/140000_full.json",
+    "bytes": 60906,
+    "sha256": "5da8144cc2d3a6ab6be40a63fd2ed099a33f1deae8e727214542e73f410ff607"
+  },
+  {
+    "path": "data/admin_boundaries/141100_full.json",
+    "bytes": 69701,
+    "sha256": "ab99967d4b45088afbe6de0ce60621afa32a7d4dbe6510bdaa8f83730e1a3574"
+  },
+  {
+    "path": "data/admin_boundaries/410000_full.json",
+    "bytes": 153774,
+    "sha256": "34119256db754324763c8484122d71524818c9cec974207bd27a9aafe2d8ad63"
+  },
+  {
+    "path": "data/admin_boundaries/410300_full.json",
+    "bytes": 84223,
+    "sha256": "8fd2a44d4f43595e543ca9d0ae6c187386080b6b2d733d38d8944cc3665bc635"
+  },
+  {
+    "path": "data/admin_boundaries/420000_full.json",
+    "bytes": 155792,
+    "sha256": "0acb559fcfe2ab2c5d2707c2477e60facdf4328ad89b8ab7d9126c5166675502"
+  },
+  {
+    "path": "data/admin_boundaries/420800_full.json",
+    "bytes": 66801,
+    "sha256": "9d8f414f41b5c17e35a4398c9d1c56e1a554e8f05520fd5adb2b0cb2a3a67102"
+  },
+  {
+    "path": "data/admin_boundaries/440000_full.json",
+    "bytes": 192961,
+    "sha256": "209ad617a296b154c4fd0828180b2a9ab2b270044990ab34e72a344ce913c8c7"
+  },
+  {
+    "path": "data/admin_boundaries/440800_full.json",
+    "bytes": 106225,
+    "sha256": "23615a7441811b701cb003d2bfcf443c630870990a36d2e9313d66b27d41ec30"
+  },
+  {
+    "path": "data/admin_boundaries/500000_full.json",
+    "bytes": 162145,
+    "sha256": "ab7c6769ee2c8941054b71d82261eae5385e237354aea1887e00c416872c457d"
+  },
+  {
+    "path": "data/admin_boundaries/610000_full.json",
+    "bytes": 71735,
+    "sha256": "969ca94cc865bf3a37c22e30d7c0125196fd22175f7c212953185f7c67921682"
+  },
+  {
+    "path": "data/admin_boundaries/610100_full.json",
+    "bytes": 77362,
+    "sha256": "17b60bf21415fc8ff30a4b4aa63edbc1ea8de1dc149fc0ddbf330517a6ebe317"
+  },
+  {
+    "path": "data/admin_boundaries/610500_full.json",
+    "bytes": 53373,
+    "sha256": "2f51d995b8e31643a933e76741d5f7e6d060ed20c36db3f25fda3f625f3f57d2"
+  },
+  {
+    "path": "data/admin_boundaries/610600_full.json",
+    "bytes": 101055,
+    "sha256": "75dc00682a5537400af33f1f843a0acae5dc16eeebfd2aa8bdfb5d6d1e30ef71"
+  },
+  {
+    "path": "data/admin_boundaries/611000_full.json",
+    "bytes": 64641,
+    "sha256": "cab0a43501cec6f556c39b9c9d0a6f6ae4789a518a72a7201997610b5d48d35d"
+  },
+  {
+    "path": "data/nasa_power_dali_2015_2024.json",
+    "bytes": 420753,
+    "sha256": "7add57d5effbc448e1802dcb50871cbbc164f108dfd330d5ec5b08e62e59f3e5"
+  },
+  {
+    "path": "data/open_meteo/era5_34.70000_110.07000_2020_174a4b43.json",
+    "bytes": 21068,
+    "sha256": "afe70a0a5ce76672aebcd8795847709a28f3da0c7f5c52578b8cd5b8bff1e4f6"
+  },
+  {
+    "path": "data/open_meteo/era5_34.70000_110.07000_2021_174a4b43.json",
+    "bytes": 21041,
+    "sha256": "442b7c87d85f30d3f76f8b4dd271514a730d0eabe6c39df5edb01124c527e692"
+  },
+  {
+    "path": "data/open_meteo/era5_34.70000_110.07000_2022_174a4b43.json",
+    "bytes": 21044,
+    "sha256": "6742832c2ed831bd8b4838ef857ab898f42b0dbf52056aba53ca2cb671772321"
+  },
+  {
+    "path": "data/open_meteo/era5_34.70000_110.07000_2023_174a4b43.json",
+    "bytes": 21055,
+    "sha256": "4f886b0e34d9dfb90c0b0713c83bd00f6b40cafd465e566fb507f79652f47afb"
+  },
+  {
+    "path": "data/open_meteo/era5_34.70000_110.07000_2024_174a4b43.json",
+    "bytes": 21131,
+    "sha256": "8fe5eaca08f6d32bd0a757095498cab1a8d5c27ebc4a1f94376c120cf6fd69be"
+  },
+  {
+    "path": "data/open_meteo/era5_34.70000_110.07000_2025_174a4b43.json",
+    "bytes": 21058,
+    "sha256": "062a623c7f854e7a38034e506055dea91b11d1d50a28154bd7a7fe6f11972334"
+  },
+  {
+    "path": "data/open_meteo/era5_34.70000_110.07000_2026_174a4b43.json",
+    "bytes": 17906,
+    "sha256": "e2637448ac39d5505acc70f347b33fe7d4caeb48b760ba5d37eab20792002c0c"
+  },
+  {
+    "path": "data/tianqi-address.json",
+    "bytes": 486358,
+    "sha256": "65604443198ece7e6de67a70d92f11077ba42ce1e09a989ce98ca7e68c2e768b"
+  },
+  {
+    "path": "era5_land_download.py",
+    "bytes": 971,
+    "sha256": "837afca0ae7ed4741eac469c7f3651a49af9cba82f42b259ff156e7f5a46b860"
+  },
+  {
+    "path": "render.yaml",
+    "bytes": 269,
+    "sha256": "65892cfe536fc232127702fac9b56059d59ed51c26c5b2fc662434b53106a4a2"
+  },
+  {
+    "path": "requirements-cloud.txt",
+    "bytes": 67,
+    "sha256": "20d7bbc090158c95d94bfe206918f94963a669e2886d94a67dbe6dc6eef53f79"
+  },
+  {
+    "path": "requirements-era5-land.txt",
+    "bytes": 35,
+    "sha256": "3bd2300a34e0cb0e368da127af3b064931a25dde754949cfa0badbf78f02df9c"
+  },
+  {
+    "path": "requirements.txt",
+    "bytes": 81,
+    "sha256": "4cc9a92a00f42e2790c5816ef3cca03358b448c8befa37463c39a5b4f3158e36"
+  },
+  {
+    "path": "start_avopt.py",
+    "bytes": 277,
+    "sha256": "8465678007768394d0ba419e7da539abffdd8f809e5e79f27c2a2a93998aa061"
+  },
+  {
+    "path": "tests/test_cloud_wsgi.py",
+    "bytes": 3164,
+    "sha256": "549492d049d723b909528d2db1c857ec84cbf68400974dcb8de965340643122f"
+  },
+  {
+    "path": "农光互补布局优化系统.py",
+    "bytes": 812,
+    "sha256": "7a0fc34dee6b40add9cdcd1ca2591855dcb4d29edc99f349b132234a3e2ad68d"
+  }
+]
