@@ -11,6 +11,8 @@ import json
 import os
 import urllib.parse
 import threading
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 import webbrowser
 import socket
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -30,6 +32,9 @@ from .crop_library import metadata as crop_metadata
 VERSION = "1.6.0"
 PLOT_LOCK = threading.Lock()
 LOGGER = logging.getLogger("AVOpt")
+JOB_LOCK = threading.Lock()
+JOBS = {}
+JOB_POOL = ThreadPoolExecutor(max_workers=1, thread_name_prefix="avopt-job")
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 available = {font.name for font in fm.fontManager.ttflist}
@@ -378,6 +383,25 @@ def create_server(port=8765, attempts=20):
     raise RuntimeError("连续 20 个端口被占用，请指定其他起始端口")
 
 
+def _run_job(job_id, req):
+    try:
+        with JOB_LOCK:
+            JOBS[job_id]["state"] = "running"
+        with PLOT_LOCK:
+            try:
+                result = run_optimization(req)
+            finally:
+                plt.close("all")
+        # 提前检查序列化，避免后台完成后轮询接口才报错。
+        json.dumps(result, ensure_ascii=False, default=float, allow_nan=False)
+        with JOB_LOCK:
+            JOBS[job_id].update(state="done", result=result, finished=time.monotonic())
+    except Exception as exc:
+        LOGGER.exception("background calculation failed")
+        with JOB_LOCK:
+            JOBS[job_id].update(state="failed", error=str(exc), finished=time.monotonic())
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         LOGGER.info(fmt, *args)
@@ -399,6 +423,19 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, Path(BASE, "AVOpt/static/client.js").read_text(encoding="utf-8"), "text/javascript; charset=utf-8")
         elif url.path == "/api/health":
             self._send(200, json.dumps({"ok": True, "version": VERSION}))
+        elif url.path == "/api/jobs":
+            job_id = urllib.parse.parse_qs(url.query).get("id", [""])[0]
+            with JOB_LOCK:
+                job = dict(JOBS[job_id]) if job_id in JOBS else None
+            if job is None:
+                self._send(404, json.dumps({"ok": False, "error": "计算任务不存在或服务已重启，请重新计算。"}, ensure_ascii=False))
+            elif job["state"] == "failed":
+                self._send(200, json.dumps({"ok": False, "error": job["error"]}, ensure_ascii=False))
+            else:
+                data = {"ok": True, "state": job["state"]}
+                if job["state"] == "done":
+                    data["result"] = job["result"]
+                self._send(200, json.dumps(data, ensure_ascii=False, default=float, allow_nan=False))
         elif url.path == "/api/weather/years":
             self._send(200, json.dumps({"ok": True, **period.catalog()}, ensure_ascii=False))
         elif url.path == "/api/weather/export":
@@ -442,7 +479,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, json.dumps({"ok": False, "error": "not found"}))
 
     def do_POST(self):
-        if self.path not in ("/api/run", "/api/export", "/api/radiation/import", "/api/weather/download"):
+        if self.path not in ("/api/run", "/api/jobs", "/api/export", "/api/radiation/import", "/api/weather/download"):
             self._send(404, json.dumps({"ok": False, "error": "not found"}))
             return
         started = time.perf_counter()
@@ -451,6 +488,21 @@ class Handler(BaseHTTPRequestHandler):
             if not 0 < n <= 8_000_000:
                 raise ValueError("请求体为空或超过 8 MB")
             req = json.loads(self.rfile.read(n).decode("utf-8"))
+            if self.path == "/api/jobs":
+                inputs.validate(req)
+                now = time.monotonic()
+                with JOB_LOCK:
+                    expired = [key for key, job in JOBS.items() if job.get("finished", now) < now - 3600]
+                    for key in expired:
+                        del JOBS[key]
+                    if sum(job["state"] in ("queued", "running") for job in JOBS.values()) >= 3:
+                        self._send(429, json.dumps({"ok": False, "error": "当前计算任务较多，请稍后重试。"}, ensure_ascii=False))
+                        return
+                    job_id = uuid.uuid4().hex
+                    JOBS[job_id] = {"state": "queued"}
+                    JOB_POOL.submit(_run_job, job_id, req)
+                self._send(202, json.dumps({"ok": True, "id": job_id}))
+                return
             if self.path == "/api/weather/download":
                 if not isinstance(req,dict):
                     raise ValueError("请求应为参数对象")
@@ -472,7 +524,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
             # Matplotlib 有全局状态；并发请求按顺序计算，避免图像相互污染。
             with PLOT_LOCK:
-                res = run_optimization(req)
+                try:
+                    res = run_optimization(req)
+                finally:
+                    plt.close("all")
             LOGGER.info("run parameters=%s elapsed=%.3fs", json.dumps(res["request"], ensure_ascii=False), time.perf_counter() - started)
             self._send(200, json.dumps(res, ensure_ascii=False, default=float, allow_nan=False))
         except (ValueError, TypeError, KeyError) as exc:
@@ -480,9 +535,6 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as exc:
             LOGGER.exception("request failed elapsed=%.3fs", time.perf_counter() - started)
             self._send(500, json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))
-        finally:
-            with PLOT_LOCK:
-                plt.close("all")
 
 
 def main(port=8765, open_browser=True):

@@ -66,8 +66,8 @@
   },
   {
     "path": "AVOpt/static/client.js",
-    "bytes": 24410,
-    "sha256": "9acb0b0c8c938eeab0013d415cbcad43ab5cf5d8dc5baf5696c0d408a86d726c"
+    "bytes": 24879,
+    "sha256": "aad112e550e9304d2045a487a6c203ac73cc298ab96333847d4799990d622f5a"
   },
   {
     "path": "AVOpt/static/index.html",
@@ -81,8 +81,8 @@
   },
   {
     "path": "AVOpt/webapp.py",
-    "bytes": 30030,
-    "sha256": "66d83d689e603a5c2a03d92e78adf06dc9558247086914598dcf7b440b7b717f"
+    "bytes": 32666,
+    "sha256": "13b163830824bcf624b3424d5c8d49a9c99bbd46f339a443c909ca6148406ecf"
   },
   {
     "path": "AVSim/__init__.py",

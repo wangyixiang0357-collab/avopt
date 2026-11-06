@@ -20,6 +20,15 @@ async function jsonRequest(url,body){
   const r=await fetch(url,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const data=await r.json();if(!r.ok || data.ok===false)throw new Error(data.error || '请求失败');return data;
 }
+async function runJob(body, started){
+  const job=await jsonRequest('/api/jobs',body);
+  while(true){
+    const current=await jsonRequest('/api/jobs?id='+encodeURIComponent(job.id));
+    if(current.state==='done')return current.result;
+    status((current.state==='queued'?'等待前面的计算完成':'正在计算')+'，已用时 '+Math.round((Date.now()-started)/1000)+' 秒。请保持页面打开。');
+    await new Promise(resolve=>setTimeout(resolve,4000));
+  }
+}
 function invalidateLocation(){locationRevision++;clearTimeout(reverseTimer);locations=[];$('area').innerHTML='<option value="">地区已改变，请重新检索</option>';$('coordinates_confirmed').checked=false;$('bias_correct').checked=false;}
 $('place').addEventListener('input',invalidateLocation);
 function coordinatesChanged(){
@@ -137,7 +146,7 @@ async function run(body){
   if(window.__STATIC__)return status('本页为离线报告，请启动系统后重新计算。');
   if($('run').disabled)return;
   const t0=Date.now();$('run').disabled=true;$('scan').disabled=true;$('run').textContent='计算中…';$('spin').classList.add('on');
-  try{const radiation=await jsonRequest('/api/radiation/status?'+radiationQuery());if(!radiation.ready&&!radiation.auto_download){await refreshRadiation();throw new Error('所选年份的 ERA5-Land 辐射尚未齐备，请先导入 CSV。');}if(body.weather_source!=='builtin'&&!body.coordinates_confirmed){if(!await locateCoordinates())throw new Error('未能按坐标确定行政区，请检查左侧定位提示。');body={...body,place:$('place').value,area_code:$('area').value,lat:$('lat').value,lon:$('lon').value,coordinates_confirmed:true};}const d=await jsonRequest('/api/run',body);render(d);status('完成，用时 '+f((Date.now()-t0)/1000)+' 秒。');await refreshRadiation();}
+  try{const radiation=await jsonRequest('/api/radiation/status?'+radiationQuery());if(!radiation.ready&&!radiation.auto_download){await refreshRadiation();throw new Error('所选年份的 ERA5-Land 辐射尚未齐备，请先导入 CSV。');}if(body.weather_source!=='builtin'&&!body.coordinates_confirmed){if(!await locateCoordinates())throw new Error('未能按坐标确定行政区，请检查左侧定位提示。');body={...body,place:$('place').value,area_code:$('area').value,lat:$('lat').value,lon:$('lon').value,coordinates_confirmed:true};}const d=await runJob(body,t0);render(d);status('完成，用时 '+f((Date.now()-t0)/1000)+' 秒。');await refreshRadiation();}
   catch(e){status('计算失败：'+e.message);}
   finally{$('run').disabled=false;$('scan').disabled=false;$('run').textContent='按综合损失估算寻优';$('spin').classList.remove('on');}
 }
